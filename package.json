@@ -1,7 +1,7 @@
 {
   "name": "nodeport",
   "preferGlobal": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "ERROR: No README.md file found!",
   "bin": {
     "nodeport": "cli.js"
