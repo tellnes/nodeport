@@ -7,6 +7,14 @@ var seaport = require('seaport')
   , log = require('npmlog')
   , optimist = require('optimist')
 
+
+function extend(dest, src) {
+  Object.keys(src).forEach(function (key) {
+    dest[key] = src[key]
+  })
+}
+
+
 var argv = optimist
   .describe('h', 'Seaport hostname')
   .alias('h', 'host')
@@ -83,7 +91,7 @@ if (fs.existsSync( pkgFile )) {
   if (main) main = path.resolve(path.dirname(pkgFile), main)
 
   role = pkg.name + '@' + pkg.version
-  if (pkg.seaport) meta = pkg.seaport
+  if (pkg.seaport) extend(meta, pkg.seaport)
 }
 
 if (!main) {
@@ -113,6 +121,15 @@ if (!main.listen) {
 var opts = conf.get('key') && JSON.parse(fs.readFileSync(path.resolve(conf.get('key')), 'utf8')) || {}
 
 var ports = seaport.connect(conf.get('port'), conf.get('host'), opts)
+
+var argMeta = conf.get('meta')
+if (typeof argMeta === 'string') {
+  argMeta = JSON.parse(fs.readFileSync(path.resolve(argMeta), 'utf8')) || {}
+}
+if (typeof argMeta === 'object') {
+  extend(meta, argMeta)
+}
+
 
 main.listen(ports.register(role, meta))
 
