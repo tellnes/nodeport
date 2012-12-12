@@ -16,7 +16,7 @@
   "author": "Christian Tellnes",
   "license": "MIT",
   "dependencies": {
-    "seaport": "~0.8.1",
+    "seaport": "~1.1.0",
     "optimist": "~0.3.5",
     "config-chain": "~1.1.2",
     "npmlog": "0.0.2"

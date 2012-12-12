@@ -9,7 +9,6 @@ var seaport = require('seaport')
 var argv = require('optimist')
   .alias('h', 'host')
   .alias('p', 'port')
-  .alias('s', 'secret')
   .alias('q', 'quiet')
   .argv
 
@@ -34,7 +33,6 @@ if (fs.existsSync(file))
 // Defaults config
 conf.root = {}
 conf.root.host = '127.0.0.1'
-conf.root.secret = ''
 
 
 if (conf.get('quiet')) {
@@ -95,12 +93,12 @@ if (!main.listen) {
   return
 }
 
-var ports = seaport.connect(conf.get('host'), conf.get('port'), { secret: conf.get('secret') })
+var opts = conf.get('key') && JSON.parse(fs.readFileSync(path.resolve(conf.get('key')), 'utf8')) || {}
 
-ports.service(role, meta, function(port, ready) {
-  log.verbose('Got port', port)
-  main.listen(port, ready)
-})
+var ports = seaport.connect(conf.get('port'), conf.get('host'), opts)
+
+main.listen(ports.register(role, meta))
+
 
 process.on('SIGINT', function() {
   log.info('Got SIGINT, closeing seaport connection')
