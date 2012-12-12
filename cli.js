@@ -5,12 +5,29 @@ var seaport = require('seaport')
   , path = require('path')
   , fs = require('fs')
   , log = require('npmlog')
+  , optimist = require('optimist')
 
-var argv = require('optimist')
+var argv = optimist
+  .describe('h', 'Seaport hostname')
   .alias('h', 'host')
+
+  .describe('p', 'Seaport port (required)')
   .alias('p', 'port')
+
+  .describe('q', 'Quiet mode')
   .alias('q', 'quiet')
+
+  .describe('k', 'Seaport key file (see Seaport documentation)')
+  .alias('k', 'key')
+
+  .describe('help', 'Displays this help message')
   .argv
+
+
+if (argv.help) {
+  optimist.showHelp()
+  return
+}
 
 
 log.heading = 'nodeport'
