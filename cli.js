@@ -131,11 +131,12 @@ if (typeof argMeta === 'object') {
 }
 
 
-main.listen(ports.register(role, meta))
+var server = main.listen(ports.register(role, meta))
 
 
 process.once('SIGINT', function () {
   log.info('Got SIGINT, closeing seaport connection')
   ports.close()
   if (typeof main.close === 'function') main.close()
+  if (typeof server.close === 'function') server.close()
 })
