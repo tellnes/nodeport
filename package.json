@@ -2,18 +2,16 @@
   "name": "nodeport",
   "preferGlobal": true,
   "version": "0.0.2",
-  "description": "ERROR: No README.md file found!",
+  "description": "nodeport",
   "bin": {
     "nodeport": "cli.js"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git://github.com/tellnes/nodeport.git"
   },
-  "author": "Christian Tellnes",
+  "author": "Christian Tellnes <christian@tellnes.no> (http://christian.tellnes.com)",
   "license": "MIT",
   "dependencies": {
     "seaport": "~1.5.0",
