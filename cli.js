@@ -41,18 +41,14 @@ if (argv.help) {
 log.heading = 'nodeport'
 
 
-var file
 
+var conf = cc( argv
+             , cc.env('NODEPORT_')
+             )
 
-var conf = cc( argv , cc.env('NODEPORT_') )
-
-file = path.resolve('.nodeport')
-if (fs.existsSync(file))
-  conf.addFile(file, 'ini', 'local')
-
-file = path.resolve(process.env.HOME, '.nodeport')
-if (fs.existsSync(file))
-  conf.addFile(file, 'ini', 'global')
+var file = cc.find('.nodeport')
+if (file)
+  conf.addString(fs.readFileSync(file))
 
 
 // Defaults config
