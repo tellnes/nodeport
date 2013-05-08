@@ -78,7 +78,7 @@ var main
   , role
   , meta = {}
 
-file = path.resolve(argv._[0])
+file = path.resolve(argv._[0] || '')
 
 var pkgFile = path.basename(file) == 'package.json' ? file : path.join(file, 'package.json')
 if (fs.existsSync( pkgFile )) {
