@@ -4,8 +4,8 @@ var seaport = require('seaport')
   , cc = require('config-chain')
   , path = require('path')
   , fs = require('fs')
-  , log = require('npmlog')
   , optimist = require('optimist')
+  , debug = require('debug')('nodeport')
 
 
 function extend(dest, src) {
@@ -38,10 +38,6 @@ if (argv.help) {
 }
 
 
-log.heading = 'nodeport'
-
-
-
 var conf = cc( argv
              , cc.env('NODEPORT_')
              )
@@ -56,17 +52,9 @@ conf.root = {}
 conf.root.host = '127.0.0.1'
 
 
-if (conf.get('quiet')) {
-  log.level = 'silent'
-} else {
-  log.level = conf.get('loglevel')
-}
-
-
 
 if (!conf.get('port')) {
-  log.error('Missing seaport port')
-  return
+  throw 'NODEPORT: Missing seaport port'
 }
 
 
@@ -104,14 +92,12 @@ if (!role) {
 try {
   main = require(main)
 } catch(err) {
-  log.error(err)
-  log.error('Failed to load main')
-  return
+  console.error('NODEPORT: Failed to load main')
+  throw err
 }
 
 if (!main.listen) {
-  log.error('Main must have a listen method')
-  return
+  throw 'NODEPORT Main must have a listen method'
 }
 
 var opts = conf.get('key') && JSON.parse(fs.readFileSync(path.resolve(conf.get('key')), 'utf8')) || {}
@@ -131,7 +117,7 @@ var server = main.listen(ports.register(role, meta))
 
 
 process.once('SIGINT', function () {
-  log.info('Got SIGINT, closeing seaport connection')
+  debug('Got SIGINT, closeing')
   ports.close()
   if (typeof main.close === 'function') main.close()
   else if (typeof server.close === 'function') server.close()
