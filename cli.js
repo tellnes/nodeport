@@ -28,6 +28,12 @@ var argv = optimist
   .describe('k', 'Seaport key file (see Seaport documentation)')
   .alias('k', 'key')
 
+  .describe('r', 'Seaport role')
+  .alias('r', 'role')
+
+  .describe('m', 'Main file')
+  .alias('m', 'main')
+
   .describe('help', 'Displays this help message')
   .argv
 
@@ -58,9 +64,11 @@ if (!conf.get('port')) {
 }
 
 
-var main
-  , role
+var main = conf.get('main')
+  , role = conf.get('role')
   , meta = {}
+
+if (main) main = path.resolve(process.cwd(), main)
 
 file = path.resolve(argv._[0] || '')
 
@@ -68,13 +76,18 @@ var pkgFile = path.basename(file) == 'package.json' ? file : path.join(file, 'pa
 if (fs.existsSync( pkgFile )) {
   var pkg = require(pkgFile)
 
-  if (pkg.nodeport) main = pkg.nodeport
-  else if (pkg.main) main = pkg.main
-  else if (pkg.scripts && pkg.scripts.start) main = pkg.scripts.start
+  if (!main) {
+    if (pkg.nodeport) main = pkg.nodeport
+    else if (pkg.main) main = pkg.main
+    else if (pkg.scripts && pkg.scripts.start) main = pkg.scripts.start
 
-  if (main) main = path.resolve(path.dirname(pkgFile), main)
+    if (main) main = path.resolve(path.dirname(pkgFile), main)
+  }
 
-  role = pkg.name + '@' + pkg.version
+  if (!role) {
+    role = pkg.name + '@' + pkg.version
+  }
+
   if (pkg.seaport) extend(meta, pkg.seaport)
 }
 
