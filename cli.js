@@ -88,6 +88,8 @@ if (fs.existsSync( pkgFile )) {
     role = pkg.name + '@' + pkg.version
   }
 
+  meta.serverRoot = path.dirname(pkgFile)
+
   if (pkg.seaport) extend(meta, pkg.seaport)
 }
 
